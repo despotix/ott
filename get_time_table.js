@@ -103,6 +103,11 @@ module.exports = function (req_obj, cb) {
                 //console.log('skipped', tt.sheduled);
             }
         }
+
+        if(!time_table.length){
+            return cb('Нет рейсов!');
+        }
+
         cb(null, result);
     }
 };
