@@ -59,27 +59,39 @@ app.post('/get_time_table', function(req, res){
     if(!id){
         id = uuid.v4();
 
-        var redis_obj = { result: false };
-        client.set(id, JSON.stringify(redis_obj), function(e){
-            if(e) {
-                return res.json([e]);
+        suggest.get_airline(req.body.airline, function(e,airlines){
+            if(!airlines.length||e){
+                return res.json([e||'Нет аэропорта: '+req.body.airline]);
             }
 
-            get_time_table(req.body, function(e, data){
-                if(e) {
-                    console.error(e);
-                    redis_obj.error = e;
-                } else {
-                    redis_obj.result = data;
+            suggest.get_airport(req.body.airport, function(e,airports){
+                if(!airports.length||e){
+                    return res.json([e||'Нет аэропорта: '+req.body.airline]);
                 }
+
+                var redis_obj = { result: false };
                 client.set(id, JSON.stringify(redis_obj), function(e){
-                    if(e){
-                        console.log('Error saving result/error:', e.stack||e);
+                    if(e) {
+                        return res.json([e]);
                     }
+
+                    get_time_table(req.body, function(e, data){
+                        if(e) {
+                            console.error(e);
+                            redis_obj.error = e;
+                        } else {
+                            redis_obj.result = data;
+                        }
+                        client.set(id, JSON.stringify(redis_obj), function(e){
+                            if(e){
+                                console.log('Error saving result/error:', e.stack||e);
+                            }
+                        });
+                    });
+
+                    res.send(200, [null, id]);
                 });
             });
-
-            res.send(200, [null, id]);
         });
     } else {
         client.get(id, function(e,redis_json){
