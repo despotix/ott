@@ -61,12 +61,12 @@ app.post('/get_time_table', function(req, res){
 
         suggest.get_airline(req.body.airline, function(e,airlines){
             if(!airlines.length||e){
-                return res.json([e||'Нет аэропорта: '+req.body.airline]);
+                return res.json([e||'Нет авиакомпании: '+req.body.airline]);
             }
 
             suggest.get_airport(req.body.airport, function(e,airports){
                 if(!airports.length||e){
-                    return res.json([e||'Нет аэропорта: '+req.body.airline]);
+                    return res.json([e||'Нет аэропорта: '+req.body.airport]);
                 }
 
                 var redis_obj = { result: false };
