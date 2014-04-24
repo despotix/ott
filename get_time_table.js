@@ -104,7 +104,7 @@ module.exports = function (req_obj, cb) {
             }
         }
 
-        if(!time_table.length){
+        if(!result.length){
             return cb('Нет рейсов!');
         }
 
