@@ -168,8 +168,10 @@ function get_query_type_arr(tm_start, tm_end, ymd, html){
                 var option_tm_start = new Date(ymd+option_tm[0].replace(/(\d+)(\d{2})/, ' $1:$2'));
                 var option_tm_end = new Date(ymd+option_tm[1].replace(/(\d+)(\d{2})/, ' $1:$2')).addDays( ('0000'==option_tm[1])?1:0 );
 
-                console.log(dt.toYMD(), option, 'current: ', option_tm_start.toFormat('DD/HH24:MI'), '-', option_tm_end.toFormat('DD/HH24:MI'), '; need:',
-                 tm_start.toFormat('DD/HH24:MI'), '-', tm_end.toFormat('DD/HH24:MI'));
+                console.log(ymd, option, 'current: ', option_tm_start.toFormat('DD/HH24:MI'), '-',
+                    option_tm_end.toFormat('DD/HH24:MI'), '; need:',
+                    tm_start.toFormat('DD/HH24:MI'), '-', tm_end.toFormat('DD/HH24:MI')
+                );
 
                 // текущий заканчивается до начала искомого
                 if(option_tm_end.getTime()<tm_start.getTime()) continue;
