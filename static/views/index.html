@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Test task</title>
+    <link rel="stylesheet" href="/css/ui-lightness/jquery-ui-1.10.4.custom.css">
+    <script type="text/javascript" language="javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="/js/jquery-ui-1.10.4.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // todo autosuggest по первым буквам названия
+            $('input[name^=air]').autocomplete({
+                source: function( request, response ) {
+                    $.ajax({
+                        url: '/suggest/'+this.element.attr('name')+'/'+this.element.val(),
+                        success: function( data ) {
+                            if(data[0]){
+                                response([]);
+                            } else {
+                                response(data[1]);
+                            }
+                        }
+                    });
+                },
+                minLength: 1
+            });
+
+            $('form').submit(function(ev){
+                ev.preventDefault();
+
+                var o = {};
+                o.airport = $('input[name^=airport]').val();
+                o.airline = $('input[name^=airline]').val();
+                o.direction = $('input[name^=direction]').val();
+                o._id = null;
+
+                if(!o.airport){
+                    alert('Specify airport!');
+                    return;
+                }
+
+                var tm_start = new Date().getTime();
+                send_rq();
+                function send_rq(){
+                    if(new Date().getTime()-tm_start>30*1000){
+                        // тут можно попробовать послать команду "отбой" серверу, если есть o._id
+                        show_error('Implementation timeout!');
+                        return;
+                    }
+                    $.ajax({
+                        timeout:30000,
+                        type:"POST",
+                        url:"/get_time_table",
+                        data:o,
+                        error:function(er){
+                            console.log('Communication error:', er);
+                            show_error(er);
+                        },
+                        success:function(data){
+                            console.log(data);
+
+                            if(data[0]){
+                                show_error(data[0]);
+                                return;
+                            }
+
+                            if(data[2]){
+                                show_result(data[2]);
+                                return;
+                            }
+
+                            if(!o._id){
+                                o._id = data[1];
+                            } else {
+                                if(data[1]!= o._id){
+                                    show_error('Wrong responce id #'+data[1]);
+                                    return;
+                                }
+                            }
+
+                            setTimeout(function(){
+                                send_rq();
+                            }, 2000);
+                        }
+                    });
+                }
+            });
+
+            $('#error').hide();
+            function show_error(){
+                $('#error').show();
+            }
+
+            function show_result(html){
+                $('#result').html(html);
+            }
+        });
+    </script>
+</head>
+<body>
+
+<form>
+    Airport: <input type="text" name="airport"><br>
+    Airline: <input type="text" name="airline"><br>
+    <input type="radio" name="direction" value="departures" checked="checked">Departures
+    <input type="radio" name="direction" value="arrivals">Arrivals<br>
+    <input type="submit" value="Submit">
+</form>
+
+<div id="error"></div>
+
+<div id="result"></div>
+
+</body>
+</html>
