@@ -67,6 +67,7 @@ app.post('/get_time_table', function(req, res){
 
             get_time_table(req.body, function(e, data){
                 if(e) {
+                    console.error(e);
                     redis_obj.error = e;
                 } else {
                     redis_obj.result = data;
@@ -87,7 +88,7 @@ app.post('/get_time_table', function(req, res){
             var redis_obj = JSON.parse(redis_json);
 
             if(redis_obj.error){
-                return res.json([e]);
+                return res.json([redis_obj.error]);
             }
 
             res.json([null, id, redis_obj.result]);
