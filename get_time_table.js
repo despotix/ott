@@ -137,7 +137,7 @@ function create_request(airport, airlineToFilter, airportQueryDate, airportQuery
 }
 
 function send_request(rq, cb){
-    //console.log(rq.url);
+    console.log(rq.url);
     request.get(
         //"http://www.flightstats.com/go/FlightStatus/flightStatusByAirport.do?airport=KBP&airportQueryDate=2014-04-24&airportQueryTime=18&airlineToFilter=&airportQueryType=1",
         rq.url,
@@ -159,7 +159,7 @@ function get_query_type_arr(tm_start, tm_end, ymd, html){
                 var option = option_arr[j];
                 var val = option.replace(/.*value="(\d+)".*/, '$1');
                 if(-1!=option.indexOf('selected="selected"')) {
-                    //console.log('got for ', option);
+                    console.log('got for ', option);
                     continue;
                 }
                 if(-1!=option.indexOf('value="-1"')) continue;
@@ -183,7 +183,7 @@ function get_query_type_arr(tm_start, tm_end, ymd, html){
     }
 
     query_type_arr = Object.keys(query_type_arr);
-    //console.log(query_type_arr);
+    console.log(query_type_arr);
     return query_type_arr;
 }
 
