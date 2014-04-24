@@ -86,6 +86,7 @@ module.exports = function (req_obj, cb) {
         // 2) в полученные данные на этапе parse_query_type с дефалтным airportQueryTime==-1 не попали искомые время/даты
 
         var result = [];
+        var uniquer = {};
         for(var i in time_table){
             var tt = time_table[i];
 
@@ -93,7 +94,10 @@ module.exports = function (req_obj, cb) {
                 // украшаю даты
                 tt.sheduled = tt.sheduled.toFormat('DD/HH24:MI');
                 if(tt.actual) tt.actual = tt.actual.toFormat('DD/HH24:MI');
-                result.push(tt);
+                if(!uniquer[tt.flight]){
+                    uniquer[tt.flight] = true;
+                    result.push(tt);
+                }
                 //console.log('added', tt);
             } else {
                 //console.log('skipped', tt.sheduled);
