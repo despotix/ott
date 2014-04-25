@@ -33,10 +33,6 @@
 
             $('form').submit(function(ev){
                 ev.preventDefault();
-                var iddle_timer = 0;
-                $('#iddle').text(iddle_timer);
-                $('#iddle').show();
-                $('#result').html('');
 
                 var o = {};
                 o.airport = $('input[name^=airport]').val();
@@ -48,6 +44,12 @@
                     alert('Specify airport!');
                     return;
                 }
+
+                $('#submit').hide();
+                var iddle_timer = 0;
+                $('#iddle').text(iddle_timer);
+                $('#iddle').show();
+                $('#result').html('');
 
                 var tm_start = new Date().getTime();
                 send_rq();
@@ -101,11 +103,15 @@
 
             $('#iddle').hide();
             function show_error(err){
+                $('#submit').show();
+
                 $('#iddle').text('ERROR: '+JSON.stringify(err.stack||err, null, '\t'));
                 $('#iddle').show();
             }
 
             function show_result(tableData){
+                $('#submit').show();
+
                 $('#iddle').hide();
                 var list_table = $('<table cellpadding="0" cellspacing="0" border="0" class="display"></table>');
                 $('#result').html('');
@@ -147,7 +153,7 @@
     Airline: <input type="text" name="airline"><br>
     <input type="radio" name="direction" value="departures" checked="checked">Departures
     <input type="radio" name="direction" value="arrivals">Arrivals<br>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" id="submit">
 </form>
 
 <h1 id="iddle"></h1>

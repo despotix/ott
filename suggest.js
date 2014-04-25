@@ -30,6 +30,17 @@ module.exports = (function () {
         });
     }
 
+    var cc = 'a'.charCodeAt(0);
+    (function collect_suggestions(){
+        if(cc>'z'.charCodeAt(0)) return console.log('Done collecting alpha-suggestions!');
+        setTimeout(function(){
+            get_names(String.fromCharCode(cc)[0], 'airport', function(){});
+            get_names(String.fromCharCode(cc)[0], 'airline', function(){});
+            cc++;
+            collect_suggestions();
+        }, 1000);
+    })();
+
     return {
         get_airport: function (ap_name, cb) {
             get_names(ap_name, 'airport', cb);
