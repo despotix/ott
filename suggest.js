@@ -1,8 +1,16 @@
 var request = require('request');
 
+global.airports = [];
+global.airlines = [];
+
 module.exports = (function () {
     function get_names(code, type, cb) {
         code = code.toUpperCase();
+
+        if(global[type][code]){
+            return cb(global[type][code]);
+        }
+
         request({
             url : 'http://www.flightstats.com/go/Suggest/'+type+'Suggest.do?responseType=json&desiredResults='+('airport'==type?'100':'50')+'&term='+code,
             headers : {
@@ -16,7 +24,9 @@ module.exports = (function () {
                     r.push(a[i].id);
                 }
             }
-            cb(null, r.sort());
+            r = r.sort();
+            global[type][code] = r;
+            cb(null, r);
         });
     }
 
