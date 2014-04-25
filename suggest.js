@@ -1,14 +1,14 @@
 var request = require('request');
 
-global.airports = [];
-global.airlines = [];
+global.airport = [];
+global.airline = [];
 
 module.exports = (function () {
     function get_names(code, type, cb) {
         code = code.toUpperCase();
 
         if(global[type][code]){
-            return cb(global[type][code]);
+            return cb(null, global[type][code]);
         }
 
         request({
