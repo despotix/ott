@@ -114,5 +114,5 @@ app.get('/get_time_table/:id', function(req, res){
         });
     }
 
-    res.render('index.html', {url: '/get_time_table/'+req.params.id+'?data'});
+    res.render('index.html', {data_url: '/get_time_table/'+req.params.id+'?data'});
 });
