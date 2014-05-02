@@ -104,6 +104,7 @@ app.get('/get_time_table/:id', function(req, res){
     if(-1!=Object.keys(req.query).indexOf('data')){
         return client.get(req.params.id, function(e,redis_json){
             var redis_obj = JSON.parse(redis_json);
+            if(e) redis_obj.error = e;
 
             console.log(redis_obj);
 
