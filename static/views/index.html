@@ -13,7 +13,8 @@
     <script type="text/javascript" language="javascript" src="/js/jquery-ui-1.10.4.js"></script>
     <script type="text/javascript" language="javascript" src="/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
-        console.log(<%=url %>);
+        var u = <%=url %>;
+        console.log(u);
 
         $(document).ready(function () {
             $.get(<%=url %>, function(){
