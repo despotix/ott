@@ -13,10 +13,12 @@
     <script type="text/javascript" language="javascript" src="/js/jquery-ui-1.10.4.js"></script>
     <script type="text/javascript" language="javascript" src="/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
+        console.log('2893huh', <%=data %>, <%=error%>);
+
         var db_data = <%=data?JSON.stringify(data):null %>;
         var db_error = <%=error?JSON.stringify(error):null %>;
 
-        console.log('2893huh', db_data, db_error);
+
 
         $(document).ready(function () {
 
