@@ -89,7 +89,7 @@ app.get('/get_time_table', function(req, res){
                     });
                 });
 
-                res.redirect('/get_time_table/'+id);
+                res.redirect('/get_time_table'+id);
             });
         });
     });
@@ -98,15 +98,14 @@ app.get('/get_time_table', function(req, res){
 app.get('/get_time_table/:id', function(req, res){
 
     client.get(req.params.id, function(e,redis_json){
-        if(e) return res.json([e]);
-
         var redis_obj = JSON.parse(redis_json);
 
-        if(redis_obj.error){
-            return res.json([redis_obj.error]);
+        var error = null;
+        if(redis_obj.error||e){
+            error = redis_obj.error||e;
         }
 
-        res.json([null, id, redis_obj.result]);
+        res.render('index.html', {data: redis_obj.result, error: error});
     });
 
 });
