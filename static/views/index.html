@@ -15,7 +15,7 @@
         console.log(u);
 
         $(document).ready(function () {
-            var interval = setInterval($.get(u, function(r){
+            var interval = setInterval(function(){$.get(u, function(r){
 
                 console.log(arguments);
 
@@ -59,7 +59,7 @@
                     "iDisplayLength": -1,
                     "aaSorting": [[ 3, 'asc' ]]
                 });
-            }), 2000);
+            })}, 2000);
         });
     </script>
 </head>
