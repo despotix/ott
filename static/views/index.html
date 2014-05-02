@@ -17,6 +17,8 @@
         $(document).ready(function () {
             var interval = setInterval($.get(u, function(r){
 
+                console.log(arguments);
+
                 if(r.error){
                     $('#result').html(r.error);
                     return;
