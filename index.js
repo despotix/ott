@@ -89,7 +89,7 @@ app.get('/get_time_table', function(req, res){
                     });
                 });
 
-                res.redirect('/get_time_table'+id);
+                res.redirect('/get_time_table/'+id);
             });
         });
     });
