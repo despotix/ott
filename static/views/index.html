@@ -13,7 +13,7 @@
     <script type="text/javascript" language="javascript" src="/js/jquery-ui-1.10.4.js"></script>
     <script type="text/javascript" language="javascript" src="/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
-        console.log(<%=data %>);
+        console.log(<%=JSON.stringify(data) %>);
         var db_data = JSON.parse(<%=data %>);
         var db_error = JSON.parse(<%=err %>);
 
