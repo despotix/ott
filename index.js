@@ -101,15 +101,18 @@ app.get('/get_time_table', function(req, res){
 
 app.get('/get_time_table/:id', function(req, res){
 
-    client.get(req.params.id, function(e,redis_json){
-        var redis_obj = JSON.parse(redis_json);
+    if(-1!=Object.keys(req.query).indexOf('data')){
+        return client.get(req.params.id, function(e,redis_json){
+            var redis_obj = JSON.parse(redis_json);
 
-        var error = null;
-        if(redis_obj.error||e){
-            error = redis_obj.error||e;
-        }
+            var error = null;
+            if(redis_obj.error||e){
+                error = redis_obj.error||e;
+            }
 
-        res.render('index.html', {data: redis_obj.result, err: error});
-    });
+            res.json( [ redis_obj.result, error ] );
+        });
+    }
 
+    res.render('index.html', {url: '/get_time_table/'+req.params.id+'?data'});
 });
