@@ -54,7 +54,7 @@ app.get('/suggest/airport/:name', function(req, res){
     });
 });
 
-app.post('/get_time_table', function(req, res){
+app.get('/get_time_table', function(req, res){
     var id = uuid.v4();
 
     suggest.get_airport(req.body.airport, function(e,airports){
@@ -95,7 +95,7 @@ app.post('/get_time_table', function(req, res){
     });
 });
 
-app.post('/get_time_table/:id', function(req, res){
+app.get('/get_time_table/:id', function(req, res){
 
     client.get(req.params.id, function(e,redis_json){
         if(e) return res.json([e]);
