@@ -109,7 +109,7 @@ app.get('/get_time_table/:id', function(req, res){
             error = redis_obj.error||e;
         }
 
-        res.render('index.html', {data: redis_obj.result, err: error});
+        res.render('index.html', {data: JSON.stringify(redis_obj.result), err: JSON.stringify(error)});
     });
 
 });
