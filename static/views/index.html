@@ -3,67 +3,55 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%=data_url %></title>
-    <link rel="stylesheet" href="/css/ui-lightness/jquery-ui-1.10.4.custom.css">
     <style type="text/css" title="currentStyle">
         @import "/css/demo_page.css";
         @import "/css/demo_table.css";
     </style>
 
     <script type="text/javascript" language="javascript" src="/js/jquery.js"></script>
-    <script type="text/javascript" language="javascript" src="/js/jquery-ui-1.10.4.js"></script>
     <script type="text/javascript" language="javascript" src="/js/jquery.dataTables.js"></script>
     <script type="text/javascript">
         var u = '<%=data_url %>';
         console.log(u);
 
         $(document).ready(function () {
-            $.get(u, function(){
-                console.log(arguments)
-            });
+            $.get(u, function(r){
+                console.log(arguments);
 
-            return;
-
-            if(db_error){
-                $('#result').html(error);
-                return;
-            }
-
-            if(!db_data){
-                setTimeout(function(){
-                    // обновляю станицу через 2 сек
-                    history.go(0);
-                }, 2000);
-                return;
-            }
-
-            var list_table = $('<table cellpadding="0" cellspacing="0" border="0" class="display"></table>');
-            $('#result').html('');
-
-            $('#result').append(list_table);
-
-            var aoColumns = [];
-            var aaData = [];
-            for(var i in tableData){
-                var a = [];
-                var b = [];
-                for(var j in tableData[i]){
-                    b.push( { "sTitle": j } );
-                    a.push(tableData[i][j]);
+                if(r.error){
+                    $('#result').html(r.error);
+                    return;
                 }
-                aaData.push(a);
-                aoColumns = b;
-            }
 
-            //console.log(tableData, aaData, aoColumns);
+                var list_table = $('<table cellpadding="0" cellspacing="0" border="0" class="display"></table>');
+                $('#result').html('');
 
-            var table = null;
-            oTable = list_table.dataTable({
-                "aaData": aaData,
-                "aoColumns": aoColumns,
-                "bLengthChange" : false,
-                "bStateSave": false,
-                "iDisplayLength": -1,
-                "aaSorting": [[ 3, 'asc' ]]
+                $('#result').append(list_table);
+
+                var aoColumns = [];
+                var aaData = [];
+                for(var i in r.result){
+                    var a = [];
+                    var b = [];
+                    for(var j in r.result[i]){
+                        b.push( { "sTitle": j } );
+                        a.push(r.result[i][j]);
+                    }
+                    aaData.push(a);
+                    aoColumns = b;
+                }
+
+                //console.log(tableData, aaData, aoColumns);
+
+                var table = null;
+                oTable = list_table.dataTable({
+                    "aaData": aaData,
+                    "aoColumns": aoColumns,
+                    "bLengthChange" : false,
+                    "bStateSave": false,
+                    "iDisplayLength": -1,
+                    "aaSorting": [[ 3, 'asc' ]]
+                });
             });
         });
     </script>

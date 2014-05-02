@@ -105,14 +105,7 @@ app.get('/get_time_table/:id', function(req, res){
         return client.get(req.params.id, function(e,redis_json){
             var redis_obj = JSON.parse(redis_json);
 
-            console.log(redis_obj);
-
-            var error = null;
-            if(redis_obj.error||e){
-                error = redis_obj.error||e;
-            }
-
-            res.json( [ redis_obj.result, error ] );
+            res.json( redis_obj );
         });
     }
 
