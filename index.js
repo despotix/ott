@@ -24,8 +24,8 @@ app.configure(function () {
     app.use(app.router);
     app.use(express.static(static_dir));
 
-    app.set('view engine', 'ejs');
-    app.register('.html', ejs);
+    app.set('views', static_dir + '/views');
+    app.engine('html', require('ejs').renderFile);
 
     app.use(function (e, req, res, next) {
         // обезопасим себя ибо тут может вылететь в корку
