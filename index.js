@@ -55,55 +55,58 @@ app.get('/suggest/airport/:name', function(req, res){
 });
 
 app.post('/get_time_table', function(req, res){
-    var id = req.body._id;
-    if(!id){
-        id = uuid.v4();
+    var id = uuid.v4();
+
+    suggest.get_airport(req.body.airport, function(e,airports){
+        if(1!=airports.length||e){
+            return res.json([e||'Нет аэропорта: '+req.body.airport]);
+        }
 
         suggest.get_airline(req.body.airline, function(e,airlines){
-            if(!airlines.length||e){
-                return res.json([e||'Нет авиакомпании: '+req.body.airline]);
+            if(req.body.airline){
+                if(1!=airlines.length||e){
+                    return res.json([e||'Нет авиакомпании: '+req.body.airline]);
+                }
             }
 
-            suggest.get_airport(req.body.airport, function(e,airports){
-                if(!airports.length||e){
-                    return res.json([e||'Нет аэропорта: '+req.body.airport]);
+            var redis_obj = { result: false };
+            client.set(id, JSON.stringify(redis_obj), function(e){
+                if(e) {
+                    return res.json([e]);
                 }
 
-                var redis_obj = { result: false };
-                client.set(id, JSON.stringify(redis_obj), function(e){
+                get_time_table(req.body, function(e, data){
                     if(e) {
-                        return res.json([e]);
+                        console.error(e);
+                        redis_obj.error = e;
+                    } else {
+                        redis_obj.result = data;
                     }
-
-                    get_time_table(req.body, function(e, data){
-                        if(e) {
-                            console.error(e);
-                            redis_obj.error = e;
-                        } else {
-                            redis_obj.result = data;
+                    client.set(id, JSON.stringify(redis_obj), function(e){
+                        if(e){
+                            console.log('Error saving result/error:', e.stack||e);
                         }
-                        client.set(id, JSON.stringify(redis_obj), function(e){
-                            if(e){
-                                console.log('Error saving result/error:', e.stack||e);
-                            }
-                        });
                     });
-
-                    res.send(200, [null, id]);
                 });
+
+                res.redirect('/get_time_table/'+id);
             });
         });
-    } else {
-        client.get(id, function(e,redis_json){
-            if(e) return res.json([e]);
+    });
+});
 
-            var redis_obj = JSON.parse(redis_json);
+app.post('/get_time_table/:id', function(req, res){
 
-            if(redis_obj.error){
-                return res.json([redis_obj.error]);
-            }
+    client.get(req.params.id, function(e,redis_json){
+        if(e) return res.json([e]);
 
-            res.json([null, id, redis_obj.result]);
-        });
-    }
+        var redis_obj = JSON.parse(redis_json);
+
+        if(redis_obj.error){
+            return res.json([redis_obj.error]);
+        }
+
+        res.json([null, id, redis_obj.result]);
+    });
+
 });
