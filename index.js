@@ -57,15 +57,15 @@ app.get('/suggest/airport/:name', function(req, res){
 app.get('/get_time_table', function(req, res){
     var id = uuid.v4();
 
-    suggest.get_airport(req.body.airport, function(e,airports){
+    suggest.get_airport(req.query.airport, function(e,airports){
         if(1!=airports.length||e){
-            return res.json([e||'Нет аэропорта: '+req.body.airport]);
+            return res.json([e||'Нет аэропорта: '+req.query.airport]);
         }
 
-        suggest.get_airline(req.body.airline, function(e,airlines){
-            if(req.body.airline){
+        suggest.get_airline(req.query.airline, function(e,airlines){
+            if(req.query.airline){
                 if(1!=airlines.length||e){
-                    return res.json([e||'Нет авиакомпании: '+req.body.airline]);
+                    return res.json([e||'Нет авиакомпании: '+req.query.airline]);
                 }
             }
 
@@ -75,7 +75,7 @@ app.get('/get_time_table', function(req, res){
                     return res.json([e]);
                 }
 
-                get_time_table(req.body, function(e, data){
+                get_time_table(req.query, function(e, data){
                     if(e) {
                         console.error(e);
                         redis_obj.error = e;
