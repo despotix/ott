@@ -10,6 +10,7 @@ var get_time_table = require('./get_time_table');
 
 var uuid = require('node-uuid');
 var express = require('express');
+var ejs = require('ejs');
 var redis = require('redis');
 
 var client = redis.createClient();
@@ -22,6 +23,9 @@ app.configure(function () {
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(static_dir));
+
+    app.set('view engine', 'ejs');
+    app.register('.html', ejs);
 
     app.use(function (e, req, res, next) {
         // обезопасим себя ибо тут может вылететь в корку
