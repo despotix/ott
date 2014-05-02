@@ -15,13 +15,19 @@
         console.log(u);
 
         $(document).ready(function () {
-            $.get(u, function(r){
+            var interval = setInterval($.get(u, function(r){
                 console.log(arguments);
 
                 if(r.error){
                     $('#result').html(r.error);
                     return;
                 }
+
+                if(!r.result){
+                    return;
+                }
+
+                clearInterval(interval);
 
                 var list_table = $('<table cellpadding="0" cellspacing="0" border="0" class="display"></table>');
                 $('#result').html('');
@@ -52,7 +58,7 @@
                     "iDisplayLength": -1,
                     "aaSorting": [[ 3, 'asc' ]]
                 });
-            });
+            }, 2000);
         });
     </script>
 </head>
